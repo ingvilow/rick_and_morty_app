@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty_app/model/characters.dart';
-import 'package:rick_and_morty_app/model/characters.dart';
+
 
 class FoundHero extends SearchDelegate {
-  final String query;
-
-  FoundHero(this.query);
-
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -18,7 +14,7 @@ class FoundHero extends SearchDelegate {
           onPressed: () {
             query = '';
           },
-          icon: FaIcon(FontAwesomeIcons.deleteLeft))
+          icon: const FaIcon(FontAwesomeIcons.xmark))
     ];
   }
 
@@ -28,20 +24,32 @@ class FoundHero extends SearchDelegate {
         onPressed: () {
           close(context, null);
         },
-        icon: FaIcon(FontAwesomeIcons.arrowRight));
+        icon: const FaIcon(FontAwesomeIcons.arrowLeft));
   }
 
   @override
   Widget buildResults(BuildContext context) {
+    return SizedBox(
+      child: Center(
+        child: Card(
+          elevation: 2,
+          color: Colors.lime,
+          child: Text(query),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
     Character character = Provider.of<Character>(context);
 
-    final _results = query != null
+    final suggestionList = query.isEmpty
         ? character.results
-            .where((ex) => ex.name.toLowerCase().contains(query.toLowerCase()))
-            .toList()
-        : character.results;
-
-    if (query.length < 3) {
+        : character.results
+            .where((element) => element.name.startsWith(query))
+            .toList();
+    if (query.length < 2) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -54,7 +62,7 @@ class FoundHero extends SearchDelegate {
       );
     }
 
-    character == null
+    return character == null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -63,17 +71,12 @@ class FoundHero extends SearchDelegate {
             ],
           )
         : ListView.builder(
-            itemCount: _results.length,
+            itemCount: suggestionList.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(_results[index].name),
+                title: Text(suggestionList[index].name),
               );
             },
           );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Column();
   }
 }

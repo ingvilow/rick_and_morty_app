@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: FoundHero(widget.query),
+                delegate: FoundHero(),
               );
             },
           ),
