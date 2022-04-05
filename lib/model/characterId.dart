@@ -1,31 +1,19 @@
-
 import 'dart:convert';
 
-import 'package:hive/hive.dart';
+CharacterId characterIdFromJson(String str) => CharacterId.fromJson(json.decode(str));
 
+String characterIdToJson(CharacterId data) => json.encode(data.toJson());
 
-part 'characters.g.dart';
-
-
-
-
-Character characterFromJson(String str) => Character.fromJson(json.decode(str));
-
-String characterToJson(Character data) => json.encode(data.toJson());
-
-@HiveType(typeId: 1)
-class Character {
-  Character({
+class CharacterId {
+  CharacterId({
     this.info,
     this.results,
   });
 
-  @HiveField(1)
   Info? info;
-  @HiveField(2)
   List<Result>? results;
 
-  factory Character.fromJson(Map<String, dynamic> json) => Character(
+  factory CharacterId.fromJson(Map<String, dynamic> json) => CharacterId(
     info: Info.fromJson(json["info"]),
     results: List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
   );
@@ -35,7 +23,7 @@ class Character {
     "results": List<dynamic>.from(results!.map((x) => x.toJson())),
   };
 }
-@HiveType(typeId: 2)
+
 class Info {
   Info({
     this.count,
@@ -47,7 +35,7 @@ class Info {
   int? count;
   int? pages;
   String? next;
-  dynamic prev;
+  dynamic? prev;
 
   factory Info.fromJson(Map<String, dynamic> json) => Info(
     count: json["count"],
@@ -63,7 +51,7 @@ class Info {
     "prev": prev,
   };
 }
-@HiveType(typeId: 3)
+
 class Result {
   Result({
     this.id,
@@ -82,10 +70,10 @@ class Result {
 
   int? id;
   String? name;
-  String? status;
-  String? species;
+  Status? status;
+  Species? species;
   String? type;
-  String? gender;
+  Gender? gender;
   Location? origin;
   Location? location;
   String? image;
@@ -96,10 +84,10 @@ class Result {
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],
     name: json["name"],
-    status: json["status"],
-    species: json["species"],
+    status: statusValues.map![json["status"]],
+    species: speciesValues.map![json["species"]],
     type: json["type"],
-    gender: json["gender"],
+    gender: genderValues.map![json["gender"]],
     origin: Location.fromJson(json["origin"]),
     location: Location.fromJson(json["location"]),
     image: json["image"],
@@ -111,10 +99,10 @@ class Result {
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "status": status,
-    "species": species,
+    "status": statusValues.reverse[status],
+    "species": speciesValues.reverse[species],
     "type": type,
-    "gender": gender,
+    "gender": genderValues.reverse[gender],
     "origin": origin!.toJson(),
     "location": location!.toJson(),
     "image": image,
@@ -123,7 +111,15 @@ class Result {
     "created": created!.toIso8601String(),
   };
 }
-@HiveType(typeId: 4)
+
+enum Gender { MALE, FEMALE, UNKNOWN }
+
+final genderValues = EnumValues({
+  "Female": Gender.FEMALE,
+  "Male": Gender.MALE,
+  "unknown": Gender.UNKNOWN
+});
+
 class Location {
   Location({
     this.name,
@@ -142,4 +138,33 @@ class Location {
     "name": name,
     "url": url,
   };
+}
+
+enum Species { HUMAN, ALIEN }
+
+final speciesValues = EnumValues({
+  "Alien": Species.ALIEN,
+  "Human": Species.HUMAN
+});
+
+enum Status { ALIVE, UNKNOWN, DEAD }
+
+final statusValues = EnumValues({
+  "Alive": Status.ALIVE,
+  "Dead": Status.DEAD,
+  "unknown": Status.UNKNOWN
+});
+
+class EnumValues<T> {
+  Map<String, T>? map;
+  Map<T, String>? reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map!.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap!;
+  }
 }

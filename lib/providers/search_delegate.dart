@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,8 +46,8 @@ class FoundHero extends SearchDelegate {
 
     final suggestionList = query.isEmpty
         ? character.results
-        : character.results
-            .where((element) => element.name.startsWith(query))
+        : character.results!
+            .where((element) => element.name!.startsWith(query))
             .toList();
     if (query.length < 2) {
       return Column(
@@ -71,10 +71,10 @@ class FoundHero extends SearchDelegate {
             ],
           )
         : ListView.builder(
-            itemCount: suggestionList.length,
+            itemCount: suggestionList!.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(suggestionList[index].name),
+                title: Text(suggestionList[index].name!),
               );
             },
           );

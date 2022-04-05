@@ -1,26 +1,26 @@
-// @dart=2.9
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty_app/model/characters.dart';
 import 'package:rick_and_morty_app/providers/search_delegate.dart';
+import 'package:rick_and_morty_app/repository/hive_service.dart';
 
 import 'detailed_page.dart';
 
 class MyHomePage extends StatefulWidget {
-  final String query;
-  const MyHomePage({Key key, this.query}) : super(key: key);
+  MyHomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
-    Character character = Provider.of<Character>(context);
+    Character? character = Provider.of<Character?>(context);
+    var characters = Provider.of<ServiceInitHive>(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -36,9 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2),
-        itemCount: character.results.length,
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemCount: character?.results?.length ?? 0,
         itemBuilder: (BuildContext context, int index) {
           return Column(
             children: [
@@ -50,18 +50,45 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.circular(15.0),
                       image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(character.results[index].image))),
+                          image:
+                              NetworkImage(character!.results![index].image!))),
                   child: GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).push<void>(_createRoute());
+                    onTap: () {
+                      print('errr');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetrailedPage(
+                                id: character.results![index].id!
+                              )));
                     },
-                    child: Chip(
-                      label: Text(character.results[index].name, style: TextStyle(fontWeight: FontWeight.bold),),
-                      backgroundColor: Colors.lime,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Chip(
+                          label: Text(
+                            character.results![index].name!,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          deleteIcon: IconButton(
+                              onPressed: () {
+                                print('some result');
+                                characters.addToFavs(
+                                    character.results![index].id!, index);
+                              },
+                              icon: Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )),
+                          backgroundColor: Colors.lime,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
+                margin:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
               ),
             ],
           );
@@ -69,20 +96,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}
-
-Route _createRoute() {
-  return PageRouteBuilder<SlideTransition>(
-    pageBuilder: (context, animation, secondaryAnimation) => DetrailedPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var tween =
-      Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero);
-      var curveTween = CurveTween(curve: Curves.ease);
-
-      return SlideTransition(
-        position: animation.drive(curveTween).drive(tween),
-        child: child,
-      );
-    },
-  );
 }
