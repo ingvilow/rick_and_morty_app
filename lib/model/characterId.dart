@@ -1,59 +1,12 @@
 import 'dart:convert';
 
-CharacterId characterIdFromJson(String str) => CharacterId.fromJson(json.decode(str));
 
-String characterIdToJson(CharacterId data) => json.encode(data.toJson());
+List<CharacterIds> characterIdsFromJson(String str) => List<CharacterIds>.from(json.decode(str).map((x) => CharacterIds.fromJson(x)));
 
-class CharacterId {
-  CharacterId({
-    this.info,
-    this.results,
-  });
+String characterIdsToJson(List<CharacterIds> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-  Info? info;
-  List<Result>? results;
-
-  factory CharacterId.fromJson(Map<String, dynamic> json) => CharacterId(
-    info: Info.fromJson(json["info"]),
-    results: List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "info": info!.toJson(),
-    "results": List<dynamic>.from(results!.map((x) => x.toJson())),
-  };
-}
-
-class Info {
-  Info({
-    this.count,
-    this.pages,
-    this.next,
-    this.prev,
-  });
-
-  int? count;
-  int? pages;
-  String? next;
-  dynamic? prev;
-
-  factory Info.fromJson(Map<String, dynamic> json) => Info(
-    count: json["count"],
-    pages: json["pages"],
-    next: json["next"],
-    prev: json["prev"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "count": count,
-    "pages": pages,
-    "next": next,
-    "prev": prev,
-  };
-}
-
-class Result {
-  Result({
+class CharacterIds {
+  CharacterIds({
     this.id,
     this.name,
     this.status,
@@ -70,10 +23,10 @@ class Result {
 
   int? id;
   String? name;
-  Status? status;
-  Species? species;
+  String? status;
+  String? species;
   String? type;
-  Gender? gender;
+  String? gender;
   Location? origin;
   Location? location;
   String? image;
@@ -81,13 +34,13 @@ class Result {
   String? url;
   DateTime? created;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory CharacterIds.fromJson(Map<String, dynamic> json) => CharacterIds(
     id: json["id"],
     name: json["name"],
-    status: statusValues.map![json["status"]],
-    species: speciesValues.map![json["species"]],
+    status: json["status"],
+    species: json["species"],
     type: json["type"],
-    gender: genderValues.map![json["gender"]],
+    gender: json["gender"],
     origin: Location.fromJson(json["origin"]),
     location: Location.fromJson(json["location"]),
     image: json["image"],
@@ -99,10 +52,10 @@ class Result {
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "status": statusValues.reverse[status],
-    "species": speciesValues.reverse[species],
+    "status": status,
+    "species": species,
     "type": type,
-    "gender": genderValues.reverse[gender],
+    "gender": gender,
     "origin": origin!.toJson(),
     "location": location!.toJson(),
     "image": image,
@@ -111,14 +64,6 @@ class Result {
     "created": created!.toIso8601String(),
   };
 }
-
-enum Gender { MALE, FEMALE, UNKNOWN }
-
-final genderValues = EnumValues({
-  "Female": Gender.FEMALE,
-  "Male": Gender.MALE,
-  "unknown": Gender.UNKNOWN
-});
 
 class Location {
   Location({
@@ -138,33 +83,4 @@ class Location {
     "name": name,
     "url": url,
   };
-}
-
-enum Species { HUMAN, ALIEN }
-
-final speciesValues = EnumValues({
-  "Alien": Species.ALIEN,
-  "Human": Species.HUMAN
-});
-
-enum Status { ALIVE, UNKNOWN, DEAD }
-
-final statusValues = EnumValues({
-  "Alive": Status.ALIVE,
-  "Dead": Status.DEAD,
-  "unknown": Status.UNKNOWN
-});
-
-class EnumValues<T> {
-  Map<String, T>? map;
-  Map<T, String>? reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map!.map((k, v) => new MapEntry(v, k));
-    }
-    return reverseMap!;
-  }
 }

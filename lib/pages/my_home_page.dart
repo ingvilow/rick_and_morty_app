@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty_app/model/characters.dart';
 import 'package:rick_and_morty_app/providers/search_delegate.dart';
+import 'package:rick_and_morty_app/providers/theme_change.dart';
 import 'package:rick_and_morty_app/repository/hive_service.dart';
 
 import 'detailed_page.dart';
@@ -21,6 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     Character? character = Provider.of<Character?>(context);
     var characters = Provider.of<ServiceInitHive>(context);
+    var themeChange = Provider.of<SwitchThemeApp>(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -33,6 +36,16 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
+          Consumer<SwitchThemeApp>(
+            builder: (context, value, child){
+              return  Switch.adaptive(
+                  activeColor: Colors.indigo,
+                  value: true,
+                  onChanged: (bool value) {
+                    themeChange.setTheme(value);
+                  });
+            },
+          )
         ],
       ),
       body: GridView.builder(
@@ -59,8 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => DetrailedPage(
-                                id: character.results![index].id!
-                              )));
+                                  name: character.results![index].name)));
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

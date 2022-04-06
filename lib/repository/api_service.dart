@@ -1,6 +1,7 @@
 
 
 import 'dart:convert';
+import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,12 +23,12 @@ class ApiService{
     }
   }
 
-  Future<CharacterId?> fetchHeroId(int? id) async{
-    final response = await http.get(Uri.parse('https://rickandmortyapi.com/api/character/?name=morty'));
-    var jsonResponse = json.decode(response.body);
+  Future<List<CharacterIds>?> fetchHeroId(String? name) async{
+    final response = await http.get(Uri.parse('https://rickandmortyapi.com/api/character/1,2,3,4,5'));
+    var jsonResponse = convert.jsonDecode(response.body) as List;
     print(jsonResponse);
     if(response.statusCode == 200){
-      return CharacterId.fromJson(jsonResponse);
+      return jsonResponse.map((e) => CharacterIds.fromJson(e)).toList();
     }
     if(response.statusCode == 404){
       return throw HttpStatus.notFound;
