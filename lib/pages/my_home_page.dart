@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty_app/model/characters.dart';
 import 'package:rick_and_morty_app/providers/search_delegate.dart';
@@ -23,7 +25,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     Character? character = Provider.of<Character?>(context);
     var characters = Provider.of<ServiceInitHive>(context);
-    var themeChange = Provider.of<SwitchThemeApp>(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -36,13 +37,14 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
-          Consumer<SwitchThemeApp>(
-            builder: (context, value, child){
+          Consumer<ServiceInitHive> (
+            builder: (context, value, _){
+              characters.switchThemeGet();
               return  Switch.adaptive(
                   activeColor: Colors.indigo,
                   value: true,
                   onChanged: (bool value) {
-                    themeChange.setTheme(value);
+                    characters.swithThemePut(value);
                   });
             },
           )

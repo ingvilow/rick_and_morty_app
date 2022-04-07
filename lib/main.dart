@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rick_and_morty_app/pages/create_post.dart';
 import 'package:rick_and_morty_app/pages/detailed_page.dart';
 import 'package:rick_and_morty_app/pages/my_home_page.dart';
+import 'package:rick_and_morty_app/providers/post_provider_hive.dart';
 import 'package:rick_and_morty_app/providers/theme_change.dart';
 import 'package:rick_and_morty_app/repository/api_service.dart';
 import 'package:rick_and_morty_app/repository/hive_service.dart';
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ServiceInitHive()),
         ChangeNotifierProvider(create: (context) => SwitchThemeApp()),
+        ChangeNotifierProvider(create: (context) => AddPostProvider()),
         FutureProvider<Character?>(
             create: (context) => apiService.fetchHero(),
             catchError: (context, error) {},
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
         darkTheme: ThemeData(
           brightness: Brightness.dark,
         ),
-        home:  MyHomePage(),
+        home:  CreatePostPage(),
       ),
     );
   }
