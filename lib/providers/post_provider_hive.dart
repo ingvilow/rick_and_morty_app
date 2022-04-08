@@ -6,9 +6,9 @@ import 'package:rick_and_morty_app/model/PostModels.dart';
 class AddPostProvider extends ChangeNotifier {
   Box<PostModels>? _box;
 
-  List<PostModels> _posts = [];
+  List<PostModels>? _posts = [];
 
-  List get postList => _posts;
+  List? get postList => _posts;
 
   Future<void> init() async {
     Hive.registerAdapter(PostModelsAdapter());
@@ -27,12 +27,12 @@ class AddPostProvider extends ChangeNotifier {
   }
 
   getPost() async {
-    _posts = _box!.values.toList() ;
+    _posts =  _box?.values.toList();
 
     notifyListeners();
   }
 
-  updateItem(int index, PostModels post) {
+  updatePost(int index, PostModels post) {
 
     _box?.putAt(index, post);
 

@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
@@ -16,15 +13,15 @@ class CreatePostPage extends StatefulWidget {
 
 class _CreatePostPageState extends State<CreatePostPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController? nameController = TextEditingController();
+  final TextEditingController? descriptionController = TextEditingController();
+
+
+
   @override
   Widget build(BuildContext context) {
-        context.watch<AddPostProvider>().getPost();
-
-        return Consumer<AddPostProvider>(
-        builder: (context, model, child) {
-      return Scaffold(
+    var createPost = Provider.of<AddPostProvider?>(context);
+    return Scaffold(
         appBar: AppBar(),
         backgroundColor: Colors.grey[200],
         body: Padding(
@@ -39,12 +36,12 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   fontFamily: 'Lato',
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 90,
                 child: ListView.builder(
-                  itemCount: model.postList.length,
+                  itemCount: createPost?.postList?.length ?? 0,
                   itemBuilder: (context, index) {
-                    PostModels post = model.postList[index];
+                    PostModels post = createPost?.postList![index];
                     return Container(
                       margin: EdgeInsets.symmetric(
                         vertical: 2,
@@ -106,14 +103,14 @@ class _CreatePostPageState extends State<CreatePostPage> {
                               onSelected: (item) {
                                 switch (item) {
                                   case 'update':
-                                    nameController.text = post.name!;
-                                    descriptionController.text =
+                                    nameController?.text = post.name!;
+                                    descriptionController?.text =
                                         post.descriptions!;
 
                                     inputItemDialog(context, 'update', index);
                                     break;
                                   case 'delete':
-                                    model.removePost(index);
+                                    createPost?.removePost(index);
                                 }
                               },
                               itemBuilder: (context) {
@@ -150,8 +147,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
           ),
         ),
       );
-    },
-    );
   }
 
   inputItemDialog(BuildContext context, String action, [int? index]) {
@@ -218,20 +213,20 @@ class _CreatePostPageState extends State<CreatePostPage> {
                         if (_formKey.currentState!.validate()) {
                           if (action == 'add') {
                             await inventoryDb.addPost(PostModels(
-                              name: nameController.text,
-                              descriptions: descriptionController.text,
+                              name: nameController?.text,
+                              descriptions: descriptionController?.text,
                             ));
                           } else {
-                            await inventoryDb.updateItem(
+                            await inventoryDb.updatePost(
                                 index!,
                                 PostModels(
-                                  name: nameController.text,
-                                  descriptions: descriptionController.text,
+                                  name: nameController?.text,
+                                  descriptions: descriptionController?.text,
                                 ));
                           }
 
-                          nameController.clear();
-                          descriptionController.clear();
+                          nameController?.clear();
+                          descriptionController?.clear();
 
                           inventoryDb.getPost();
 
