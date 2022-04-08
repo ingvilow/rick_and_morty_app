@@ -18,6 +18,7 @@ class AddPostProvider extends ChangeNotifier {
   addPost(PostModels post) async {
     _box?.add(post);
 
+    print('added');
     notifyListeners();
   }
 
@@ -26,10 +27,9 @@ class AddPostProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getPost() async {
-    _posts =  _box?.values.toList();
-
-    notifyListeners();
+  List<PostModels> getPost(final String name) {
+    final post = _box?.values.where((element) => element.name == name);
+    return post!.toList();
   }
 
   updatePost(int index, PostModels post) {
@@ -38,6 +38,5 @@ class AddPostProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
 
 }
