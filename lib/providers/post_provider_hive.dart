@@ -4,9 +4,10 @@ import 'package:hive/hive.dart';
 import 'package:rick_and_morty_app/model/PostModels.dart';
 
 class AddPostProvider extends ChangeNotifier {
-  Box<PostModels>? _box;
+  Box <PostModels>? _box;
 
-  List<PostModels>? _posts = [];
+
+  List <PostModels> _posts = [];
 
   List? get postList => _posts;
 
@@ -27,9 +28,9 @@ class AddPostProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<PostModels> getPost(final String name) {
+  List<PostModels>? getPost(final String name) {
     final post = _box?.values.where((element) => element.name == name);
-    return post!.toList();
+    return post?.toList();
   }
 
   updatePost(int index, PostModels post) {

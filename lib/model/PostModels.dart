@@ -10,5 +10,5 @@ class PostModels{
   @HiveField(2)
   String? descriptions;
 
-  PostModels({this.name, this.descriptions,  });
+  PostModels({this.name, this.descriptions, });
 }
