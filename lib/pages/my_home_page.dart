@@ -8,6 +8,7 @@ import 'package:rick_and_morty_app/model/characters.dart';
 import 'package:rick_and_morty_app/providers/search_delegate.dart';
 import 'package:rick_and_morty_app/providers/theme_change.dart';
 import 'package:rick_and_morty_app/repository/hive_service.dart';
+import 'package:rick_and_morty_app/widgets/bottomnav.dart';
 
 import 'detailed_page.dart';
 
@@ -76,38 +77,17 @@ class _MyHomePageState extends State<MyHomePage> {
                               builder: (context) => DetrailedPage(
                                   name: character.results![index].name)));
                     },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Chip(
-                          label: Text(
-                            character.results![index].name!,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          deleteIcon: IconButton(
-                              onPressed: () {
-                                print('some result');
-                                characters.addToFavs(
-                                    character.results![index].id!, index);
-                              },
-                              icon: Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              )),
-                          backgroundColor: Colors.lime,
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 margin:
                     const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
               ),
+
             ],
           );
         },
       ),
+      bottomNavigationBar: BtmnavBar(),
     );
   }
 }
