@@ -1,10 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty_app/model/characters.dart';
-
 
 class FoundHero extends SearchDelegate {
   @override
@@ -42,11 +39,12 @@ class FoundHero extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    Character character = Provider.of<Character>(context);
+    List<CharacterAll>? character =
+        Provider.of<List<CharacterAll>?>(context)?.toList();
 
     final suggestionList = query.isEmpty
-        ? character.results
-        : character.results!
+        ? character
+        : character!
             .where((element) => element.name!.startsWith(query))
             .toList();
     if (query.length < 2) {

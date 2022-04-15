@@ -6,66 +6,13 @@ import 'package:hive/hive.dart';
 
 part 'characters.g.dart';
 
+List<CharacterAll> characterAllFromJson(String str) => List<CharacterAll>.from(json.decode(str).map((x) => CharacterAll.fromJson(x)));
 
-
-
-Character characterFromJson(String str) => Character.fromJson(json.decode(str));
-
-String characterToJson(Character data) => json.encode(data.toJson());
+String characterAllToJson(List<CharacterAll> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 @HiveType(typeId: 1)
-class Character {
-  Character({
-    this.info,
-    this.results,
-  });
-
-  @HiveField(1)
-  Info? info;
-  @HiveField(2)
-  List<Result>? results;
-
-  factory Character.fromJson(Map<String, dynamic> json) => Character(
-    info: Info.fromJson(json["info"]),
-    results: List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "info": info!.toJson(),
-    "results": List<dynamic>.from(results!.map((x) => x.toJson())),
-  };
-}
-@HiveType(typeId: 2)
-class Info {
-  Info({
-    this.count,
-    this.pages,
-    this.next,
-    this.prev,
-  });
-
-  int? count;
-  int? pages;
-  String? next;
-  dynamic prev;
-
-  factory Info.fromJson(Map<String, dynamic> json) => Info(
-    count: json["count"],
-    pages: json["pages"],
-    next: json["next"],
-    prev: json["prev"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "count": count,
-    "pages": pages,
-    "next": next,
-    "prev": prev,
-  };
-}
-@HiveType(typeId: 3)
-class Result {
-  Result({
+class CharacterAll {
+  CharacterAll({
     this.id,
     this.name,
     this.status,
@@ -80,9 +27,13 @@ class Result {
     this.created,
   });
 
+  @HiveField(0)
   int? id;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? status;
+  @HiveField(3)
   String? species;
   String? type;
   String? gender;
@@ -93,7 +44,7 @@ class Result {
   String? url;
   DateTime? created;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory CharacterAll.fromJson(Map<String, dynamic> json) => CharacterAll(
     id: json["id"],
     name: json["name"],
     status: json["status"],
@@ -123,7 +74,7 @@ class Result {
     "created": created!.toIso8601String(),
   };
 }
-@HiveType(typeId: 4)
+
 class Location {
   Location({
     this.name,

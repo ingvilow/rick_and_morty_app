@@ -3,16 +3,18 @@ import 'package:hive/hive.dart';
 import 'package:rick_and_morty_app/model/characters.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+
+/*
 class ServiceInitHive with ChangeNotifier{
 
-  Box<Character>? _box;
+  Box<List<CharacterAll>>? _box;
 
   Box?  _mode;
 
-  Character? character;
+  List<CharacterAll>? character;
 
   Future<void> init() async{
-    Hive.registerAdapter(CharacterAdapter());
+    Hive.registerAdapter(CharacterAllAdapter());
     _box = await Hive.openBox('character');
    _mode = await Hive.openBox('darkMode');
     await Hive.initFlutter();
@@ -37,8 +39,9 @@ class ServiceInitHive with ChangeNotifier{
   }
 
   void removeFavs(final int id, int index) async{
-    final removeFavs = _box?.values.firstWhere((element) => element.results?[index].id == id);
+    final removeFavs = _box?.values.firstWhere((element) => element[index].id == id);
     _box!.delete(removeFavs);
     notifyListeners();
   }
 }
+*/

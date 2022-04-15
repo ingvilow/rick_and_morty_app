@@ -16,9 +16,10 @@ class PostModelsAdapter extends TypeAdapter<PostModels> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PostModels()
-      ..name = fields[1] as String?
-      ..descriptions = fields[2] as String?;
+    return PostModels(
+      name: fields[1] as String?,
+      descriptions: fields[2] as String?,
+    );
   }
 
   @override

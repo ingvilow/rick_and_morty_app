@@ -6,30 +6,36 @@ part of 'characters.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CharacterAdapter extends TypeAdapter<Character> {
+class CharacterAllAdapter extends TypeAdapter<CharacterAll> {
   @override
   final int typeId = 1;
 
   @override
-  Character read(BinaryReader reader) {
+  CharacterAll read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Character(
-      info: fields[1] as Info?,
-      results: (fields[2] as List?)?.cast<Result>(),
+    return CharacterAll(
+      id: fields[0] as int?,
+      name: fields[1] as String?,
+      status: fields[2] as String?,
+      species: fields[3] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Character obj) {
+  void write(BinaryWriter writer, CharacterAll obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.info)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.results);
+      ..write(obj.status)
+      ..writeByte(3)
+      ..write(obj.species);
   }
 
   @override
@@ -38,94 +44,7 @@ class CharacterAdapter extends TypeAdapter<Character> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CharacterAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class InfoAdapter extends TypeAdapter<Info> {
-  @override
-  final int typeId = 2;
-
-  @override
-  Info read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return Info();
-  }
-
-  @override
-  void write(BinaryWriter writer, Info obj) {
-    writer..writeByte(0);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InfoAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class ResultAdapter extends TypeAdapter<Result> {
-  @override
-  final int typeId = 3;
-
-  @override
-  Result read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return Result();
-  }
-
-  @override
-  void write(BinaryWriter writer, Result obj) {
-    writer..writeByte(0);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ResultAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class LocationAdapter extends TypeAdapter<Location> {
-  @override
-  final int typeId = 4;
-
-  @override
-  Location read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return Location();
-  }
-
-  @override
-  void write(BinaryWriter writer, Location obj) {
-    writer..writeByte(0);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LocationAdapter &&
+      other is CharacterAllAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
